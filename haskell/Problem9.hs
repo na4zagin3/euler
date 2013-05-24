@@ -1,3 +1,4 @@
+newtonSeq :: (a -> a) -> a -> [a]
 newtonSeq f n =
     n : newtonSeq f (f n)
 
@@ -16,8 +17,10 @@ isqrt n = sqrtSeq n
       next p = quot (p + quot n p) 2
       sqrtSeq m = head . reverse . takeWhile2 (>) $ newtonSeq next m
 
-pythagoreanTriples :: [(Integer,Integer,Integer)]
-pythagoreanTriples = [ (a, b, c) | c <- [1..], a <- [1..(c-1)], b <- return . isqrt $ (c^2 - a^2), a <= b, a^2 + b^2 == c^2]
+pythagoreanTriples :: (Integral a)=> [(a,a,a)]
+pythagoreanTriples = [ (a, b, c) | c <- [1..], a <- [1..(c-1)], b <- return . isqrt $ (sq c - sq a), a <= b, sq a + sq b == sq c]
+    where
+      sq x = x * x
 
 main :: IO ()
-main = print $ (\ (a, b, c) -> a * b * c) . head . filter (\ (a, b, c) -> a + b + c == 1000) $ pythagoreanTriples
+main = print $ (\ (a, b, c) -> a * b * c :: Integer) . head . filter (\ (a, b, c) -> a + b + c == 1000) $ pythagoreanTriples
