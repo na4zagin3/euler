@@ -1,6 +1,4 @@
-x :: Integer
-x = 100
-
+newtonSeq :: (a -> a) -> a -> [a]
 newtonSeq f n =
     n : newtonSeq f (f n)
 
@@ -19,14 +17,16 @@ isqrt n = sqrtSeq n
       next p = quot (p + quot n p) 2
       sqrtSeq m = head . reverse . takeWhile2 (>) $ newtonSeq next m
 
+isPrime :: (Integral a)=> a -> Bool
 isPrime n | n < 2       = False
           | otherwise   = all (\m -> mod n m /= 0) $ primeCandidates n
 
+primeCandidates :: (Integral a)=> a -> [a]
 primeCandidates n | n <= 2      = []
                   | otherwise   = takeWhile (<= (isqrt n)) primes
 
-primes :: [Integer]
+primes :: (Integral a)=> [a]
 primes = filter isPrime [2..]
 
 main :: IO ()
-main = print $ sum . takeWhile (< 2000000) $ primes
+main = print $ sum . takeWhile (< (2000000 :: Integer)) $ primes
